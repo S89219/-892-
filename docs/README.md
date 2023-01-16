@@ -151,3 +151,179 @@ These individual tutorials expand on topics discussed in the guide above.
 ## Development
 
 See [development/README.md](development/README.md)
+
+
+bit.ly/3CPsHZC#yt4
+
+bit.ly/3iJATUC#r
+
+bit.ly/3J9QojF#05
+
+vimeo.com/406424805#wp-prồ
+
+bit.ly/3QM9iPm#05
+
+vimeo.com/406424805#wp-prồ
+
+mobisystems.com/file-commander-premium/892_47-соmmаndеr⁴-ߠ-#H5061
+
+s89219.github.io/-Z-E-R-O-E--#05
+
+cộng đồng dựa trên các quyền cơ bản của con người
+
+"Cеntеrрrо_892,4.Μ HТТ - dpp/simply_lift GitHub Wiki
+github-wiki-see.page/m/dpp/simply_lift/wiki/Cеntеrрrо_892,4.Μ-HТТ-#H4
+
+linkedin.com/legal/copyright-policy#892
+stackoverflow.com/legal/cookie-policy#892
+stackoverflow.com/legal/terms-of-service/public#892 repository-images.githubusercontent.com/489401847/18a8d2d1-a9c0-48d9-b414-3b527c12c24e#4 repository-images.githubusercontent.com/492292951/77dd9314-2c85-4b96-a8cb-11f08de147af#4 https://nhadat.cafeland.vn/moi-gioi/huy-tuan-tran-tuan-id-0339360792-186412.html#892
+ global.oup.com/privacy?cc=892
+
+github.com/dpp/simply_lift/wiki/-Сеոtеrрrօ_892⁴-߀З.Μ-HТߠ-
+
+
+ 
+ 
+S89219
+/
+-RAGE_892-
+
+Browse files
+aws-ס-tnkh.MWM
+ 892-19⁴
+
+S89219 committed on May 17, 2022 Verified
+1 parent 290e367 commit 35d7c32d5ac501a25a8d705290983f7022a3460d
+Showing 1 changed file with 95 additions and 0 deletions.
+SplitUnified
+ 95  
+.github/workflows/סaws-tnkh.MWM
+@@ -0,0 +1,95 @@
+# This workflow will build and push a new container image to Amazon ECR,
+# and then will deploy a new task definition to Amazon ECS, when there is a push to the 892-19⁴ branch.
+#
+# To use this workflow, you will need to complete the following set-up steps:
+#
+# 1. Create an ECR repository to store your images.
+#    For example: `aws ecr create-repository --repository-name my-ecr-repo --region us-east-2`.
+#    Replace the value of the `ECR_REPOSITORY` environment variable in the workflow below with your repository's name.
+#    Replace the value of the `AWS_REGION` environment variable in the workflow below with your repository's region.
+#
+# 2. Create an ECS task definition, an ECS cluster, and an ECS service.
+#    For example, follow the Getting Started guide on the ECS console:
+#      https://us-east-2.console.aws.amazon.com/ecs/home?region=us-east-2#/firstRun
+#    Replace the value of the `ECS_SERVICE` environment variable in the workflow below with the name you set for the Amazon ECS service.
+#    Replace the value of the `ECS_CLUSTER` environment variable in the workflow below with the name you set for the cluster.
+#
+# 3. Store your ECS task definition as a JSON file in your repository.
+#    The format should follow the output of `aws ecs register-task-definition --generate-cli-skeleton`.
+#    Replace the value of the `ECS_TASK_DEFINITION` environment variable in the workflow below with the path to the JSON file.
+#    Replace the value of the `CONTAINER_NAME` environment variable in the workflow below with the name of the container
+#    in the `containerDefinitions` section of the task definition.
+#
+# 4. Store an IAM user access key in GitHub Actions secrets named `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+#    See the documentation for each action used below for the recommended IAM policies for this IAM user,
+#    and best practices on handling the access key credentials.
+
+name: Deploy to Amazon ECS
+
+on:
+  push:
+    branches:
+      - 892-19⁴
+
+env:
+  AWS_REGION: MY_AWS_REGION                   # set this to your preferred AWS region, e.g. us-west-1
+  ECR_REPOSITORY: MY_ECR_REPOSITORY           # set this to your Amazon ECR repository name
+  ECS_SERVICE: MY_ECS_SERVICE                 # set this to your Amazon ECS service name
+  ECS_CLUSTER: MY_ECS_CLUSTER                 # set this to your Amazon ECS cluster name
+  ECS_TASK_DEFINITION: MY_ECS_TASK_DEFINITION # set this to the path to your Amazon ECS task definition
+                                               # file, e.g. .aws/task-definition.json
+  CONTAINER_NAME: MY_CONTAINER_NAME           # set this to the name of the container in the
+                                               # containerDefinitions section of your task definition
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push image to Amazon ECR
+      id: build-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        # Build a docker container and
+        # push it to ECR so that it can
+        # be deployed to ECS.
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+    - name: Fill in the new image ID in the Amazon ECS task definition
+      id: task-def
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: ${{ env.ECS_TASK_DEFINITION }}
+        container-name: ${{ env.CONTAINER_NAME }}
+        image: ${{ steps.build-image.outputs.image }}
+
+    - name: Deploy Amazon ECS task definition
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.task-def.outputs.task-definition }}
+        service: ${{ env.ECS_SERVICE }}
+        cluster: ${{ env.ECS_CLUSTER }}
+        wait-for-service-stability: true
+0 comments on commit 35d7c32
+ Unlock conversation
+
+Write Preview
+Add heading textAdd bold text, <Ctrl+b>Add italic text, <Ctrl+i>
+Add a quote, <Ctrl+Shift+.>Add code, <Ctrl+e>Add a link, <Ctrl+k>
+Add a bulleted list, <Ctrl+Shift+8>Add a numbered list, <Ctrl+Shift+7>Add a task list, <Ctrl+Shift+l>
+Directly mention a user or team
+Reference an issue, pull request, or discussion
+Add saved reply
+
+Chọn tệpKhông có tệp nào được chọn
+Attach files by dragging & dropping, selecting or pasting them.
+Styling with Markdown is supported
+Comment on this commit
+Unsubscribe
+ You’re receiving notifications because you’re watching this repository.
+Footer
+© 2023 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+aws-ס-tnkh.MWM · S89219/-RAGE_892-@35d7c32"
+ u
